@@ -1,36 +1,86 @@
 const strictEquals = (valueA, valueB) => {
-  if (Object.is(valueA, 1) && Object.is(valueB, 1)) {
-    let result = Object.is(valueA, valueB);
-    return result;
+  let result = [
+    "| valueA  | valueB  | RESULT |                   |",
+    "| ------- | ------- | -------------------------- |",
+  ];
+
+  if (
+    (valueA < 0 || valueA > 0) &&
+    (valueB < 0 || valueB > 0) &&
+    ["number"].includes(typeof valueA) &&
+    ["number"].includes(typeof valueB)
+  ) {
+    result.push(
+      `| ${valueA}       | ${valueB}       | ${Object.is(
+        valueA,
+        valueB
+      )}  |                   |`
+    );
   }
+
   if (Object.is(valueA, NaN) && Object.is(valueB, NaN)) {
-    let result = Object.is(valueA, valueB);
-    return result;
+    result.push(
+      `| ${valueA}     | ${valueB}     | ${false}  | // Rule Exception |`
+    );
   }
-  if (Object.is(valueA, 0) && Object.is(valueB, -0)) {
-    let result = Object.is(valueA, valueB);
-    return result;
+
+  if (
+    (Object.is(valueA, -0) && Object.is(valueB, 0)) ||
+    (Object.is(valueA, 0) && Object.is(valueB, -0))
+  ) {
+    result.push(
+      `| ${valueA}       | ${valueB}       | ${true}   | // Rule Exception |`
+    );
   }
-  if (Object.is(valueA, -0) && Object.is(valueB, 0)) {
-    let result = Object.is(valueA, valueB);
-    return result;
+
+  if (
+    ((valueA < 0 || valueA > 0) && Object.is(typeof valueB, "string")) ||
+    (Object.is(typeof valueA, "string") && (valueB < 0 || valueB > 0))
+  )
+    result.push(
+      `| ${valueA}       | ${valueB}       | ${Object.is(
+        valueA,
+        valueB
+      )}  |                   |`
+    );
+
+  if (
+    (Object.is(valueA, true) && Object.is(valueB, false)) ||
+    (Object.is(valueA, false) && Object.is(valueB, true))
+  ) {
+    result.push(
+      `| ${valueA}    | ${valueB}   | ${Object.is(
+        valueA,
+        valueB
+      )}  |                   |`
+    );
   }
-  if (Object.is(valueA, 1) && Object.is(valueB, "1")) {
-    let result = Object.is(valueA, valueB);
-    return result;
+
+  if (
+    (Object.is(valueA, false) && Object.is(valueB, false)) ||
+    (Object.is(valueA, true) && Object.is(valueB, true))
+  ) {
+    result.push(
+      `| ${valueA}    | ${valueB}    | ${Object.is(
+        valueA,
+        valueB
+      )}   |                   |`
+    );
   }
-  if (Object.is(valueA, true) && Object.is(valueB, false)) {
-    let result = Object.is(valueA, valueB);
-    return result;
+
+  if (
+    Object.is(typeof valueA, "string") &&
+    Object.is(typeof valueB, "string")
+  ) {
+    result.push(
+      `| ${valueA}    | ${valueB}    | ${Object.is(
+        valueA,
+        valueB
+      )}  |                   |`
+    );
   }
-  if (Object.is(valueA, false) && Object.is(valueB, false)) {
-    let result = Object.is(valueA, valueB);
-    return result;
-  }
-  if (Object.is(valueA, "Water") && Object.is(valueB, "oil")) {
-    let result = Object.is(valueA, valueB);
-    return result;
-  }
+
+  return result;
 };
 
 export default strictEquals;
